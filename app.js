@@ -1,11 +1,14 @@
 import express from "express";
-import router from "./routers/userData.js";
-import connectDB from "./mongoDB.js";
+import connectDB from "./config/mongoDB.js";
+import orderRouter from "./routers/orderRouter.js";
+import authRouter from "./routers/authRouter.js";
 const app = express();
+
 app.use(express.json());
 const PORT = 3000;
 
-app.use("/api", router);
+app.use("/api/auth", authRouter);
+app.use("/api/orders", orderRouter);
 
 connectDB();
 app.listen(PORT, () => {

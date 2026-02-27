@@ -1,0 +1,19 @@
+Authenticate user (JWT)
+
+Fetch user cart
+
+Validate product availability
+
+Calculate total price
+
+Process payment (external service)
+
+Create order record
+
+Reduce inventory stock
+
+Clear cart
+
+Send confirmation email
+
+Return response
