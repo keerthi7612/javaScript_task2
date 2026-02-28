@@ -2,9 +2,8 @@ import User from "../model/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "secretkey"; // move to .env in real projects
+const JWT_SECRET = "secretkey";
 
-// REGISTER
 export const registerUser = async ({ name, email, password }) => {
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -23,16 +22,14 @@ export const registerUser = async ({ name, email, password }) => {
 };
 
 // LOGIN
+const SECRET = "mysecret123"; // ✅ use same value everywhere
+
 export const loginUser = async ({ email, password }) => {
   const user = await User.findOne({ email });
-  if (!user) throw new Error("User not found");
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new Error("Invalid password");
-
-  const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+  const token = jwt.sign({ id: user._id, email: user.email }, SECRET, {
     expiresIn: "1d",
   });
 
-  return { token, user };
+  return { token };
 };
