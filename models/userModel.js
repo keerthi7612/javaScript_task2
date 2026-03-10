@@ -1,11 +1,7 @@
 import mongoose from "mongoose";
 
-const schemaUser = mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: String,
-  age: Number,
-  role: String,
-  active: Boolean,
-  salary: Number,
+  balance: Number,
 });
-
-export default mongoose.model("User", schemaUser);
+export default mongoose.model("User", userSchema);
