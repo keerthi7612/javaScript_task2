@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import mongose from "mongoose";
 
 const subscriptionSchema = new mongoose.Schema({
   userId: {
@@ -11,6 +10,10 @@ const subscriptionSchema = new mongoose.Schema({
   status: {
     type: String,
     default: "active",
+  },
+  serviceActive: {
+    type: Boolean,
+    default: true,
   },
 });
 
