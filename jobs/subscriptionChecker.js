@@ -2,7 +2,6 @@ import cron from "node-cron";
 import Subscription from "../models/subscriptionModel.js";
 import User from "../models/userModel.js";
 
-//Check and mark subscriptions as expired
 cron.schedule("*/1 * * * *", async () => {
   const expiredSubs = await Subscription.find({
     expiryDate: { $lt: new Date() },
@@ -19,7 +18,6 @@ cron.schedule("*/1 * * * *", async () => {
   }
 });
 
-//Delete old expired subscriptions
 cron.schedule("0 2 * * *", async () => {
   console.log("Running cleanup: deleting old expired subscriptions...");
 
