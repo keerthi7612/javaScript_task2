@@ -1,15 +1,19 @@
 import { sendEmailService } from "../services/emailService.js";
+import {
+  getMissingTemplateFields,
+  getSupportedEmailTypes,
+} from "../utils/emailTemplates.js";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const sendEmail = async (req, res) => {
   try {
-    const { to, subject, message } = req.body;
+    const { to, name, type = {} } = req.body;
 
-    if (!to || !subject || !message) {
+    if (!to || !name || !type) {
       return res.status(400).json({
         success: false,
-        message: "All fields are required",
+        message: "to, name and type are required",
       });
     }
 
@@ -20,7 +24,41 @@ export const sendEmail = async (req, res) => {
       });
     }
 
-    const result = await sendEmailService({ to, subject, message });
+    if (typeof name !== "string" || !name.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid name",
+      });
+    }
+
+    if (typeof type !== "string" || !type.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid email type",
+      });
+    }
+
+    const supportedTypes = getSupportedEmailTypes();
+    if (!supportedTypes.includes(type)) {
+      return res.status(400).json({
+        success: false,
+        message: `Unsupported email type. Supported types: ${supportedTypes.join(", ")}`,
+      });
+    }
+
+    const missingFields = getMissingTemplateFields(type);
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing extraData fields for ${type}: ${missingFields.join(", ")}`,
+      });
+    }
+
+    const result = await sendEmailService({
+      to: to.trim(),
+      name: name.trim(),
+      type,
+    });
 
     if (!result.success) {
       return res.status(500).json({
